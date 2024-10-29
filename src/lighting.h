@@ -91,7 +91,7 @@ public:
         FastLED.show();
     }
 
-void spider_room_lighting(CRGB* leds, int numLeds, int flashes = 10, int frequency = 10) {
+void spider_room_lightning(CRGB* leds, int numLeds, int flashes = 10, int frequency = 10) {
     int ledStart, ledLen, dimmer;
 
     // Determine starting location of flash
@@ -106,7 +106,7 @@ void spider_room_lighting(CRGB* leds, int numLeds, int flashes = 10, int frequen
         else dimmer = random8(1, 3);            
 
         // Randomly choose either white or purple for each flash
-        CRGB flashColor = random(0, 2) == 0 ? CRGB::White : CRGB(80, 0, 255);
+        CRGB flashColor = random(0, 10) <= 7 ? CRGB::White : CRGB(80, 0, 255);
 
         // Fill the selected section of LEDs with the chosen flash color, scaled by dimmer
         fill_solid(leds + ledStart, ledLen, flashColor);
@@ -149,6 +149,11 @@ void spider_room_lighting(CRGB* leds, int numLeds, int flashes = 10, int frequen
             uint8_t colorIndex = (base_index + i * (255 / NUM_LEDS)) % 255;
             leds[i] = ColorFromPalette(scream_room_palette, colorIndex, 255, LINEARBLEND);
         }
+        FastLED.show();
+    }
+
+    void glow_white(CRGB* leds) {
+        fill_solid(leds, NUM_LEDS, CRGB::White);
         FastLED.show();
     }
 };

@@ -16,6 +16,8 @@ static const int OKAY = 0x1C;
 // Variable to store the active configuration
 int activeConfig = 0;
 
+bool switch_strips = false;
+
 void setup() {
     Serial.begin(115200);
     IrReceiver.begin(4);
@@ -34,54 +36,54 @@ void loop() {
                 lighting.set_brightness(20);
                 break;
             case ONE:
-                lighting.clear_strip(lighting.leds1);  // Clear leds1
-                lighting.clear_strip(lighting.leds2);  // Clear leds2
-                activeConfig = 1; // Set to Configuration 1: Fairy room on leds1, scream room on leds2
+                lighting.clear_strip(lighting.leds1);
+                lighting.clear_strip(lighting.leds2);
+                if(switch_strips) {
+                    lighting.fairy_room(lighting.leds1);
+                    lighting.scream_room(lighting.leds2);
+                }
+                else {
+                    lighting.fairy_room(lighting.leds2);
+                    lighting.scream_room(lighting.leds1);
+                }
+                switch_strips = !switch_strips;
                 break;
             case TWO:
-                lighting.clear_strip(lighting.leds1);  // Clear leds1
-                lighting.clear_strip(lighting.leds2);  // Clear leds2
-                activeConfig = 2; // Set to Configuration 2: Petting zoo room on leds1, fairy room on leds2
+                lighting.clear_strip(lighting.leds1);
+                lighting.clear_strip(lighting.leds2);
+                if(switch_strips) {
+                    lighting.scream_room(lighting.leds1);
+                    lighting.spider_room_lightning(lighting.leds2, 216);
+                    lighting.spider_room_lightning(lighting.leds3, 216);
+                }
+                else {
+                    lighting.scream_room(lighting.leds2);
+                    lighting.spider_room_lightning(lighting.leds1, 216);
+                    lighting.spider_room_lightning(lighting.leds3, 216);
+                }
+                switch_strips = !switch_strips;
                 break;
             case THREE:
-                lighting.clear_strip(lighting.leds1);  // Clear leds1
-                lighting.clear_strip(lighting.leds2);  // Clear leds2
-                activeConfig = 3; // Set to Configuration 3: Spider room on leds1, spider room lightning on leds2
+                lighting.clear_strip(lighting.leds1);
+                lighting.clear_strip(lighting.leds2);
+                lighting.spider_room_lightning(lighting.leds1, 216);
+                lighting.spider_room_lightning(lighting.leds2, 216);
                 break;
             case FOUR:
-                lighting.clear_strip(lighting.leds1);  // Clear leds1
-                lighting.clear_strip(lighting.leds2);  // Clear leds2
-                activeConfig = 4; // Set to Configuration 4: Scream room on leds1, petting zoo room on leds2
+                lighting.clear_strip(lighting.leds1);
+                lighting.clear_strip(lighting.leds2);
+                lighting.glow_white(lighting.leds1);
+                lighting.glow_white(lighting.leds2);
                 break;
             case OKAY:
-                lighting.clear_strip(lighting.leds1);  // Clear leds1
-                lighting.clear_strip(lighting.leds2);  // Clear leds2
-                activeConfig = 0; // No active configuration after clearing
+                lighting.clear_strip(lighting.leds1);
+                lighting.clear_strip(lighting.leds2);
+                activeConfig = 0;
                 break;
             default:
                 break;
             }
         }
         IrReceiver.resume();
-    }
-
-    // Apply the currently active configuration
-    switch (activeConfig) {
-    case 1:
-        lighting.fairy_room(lighting.leds1);
-        lighting.scream_room(lighting.leds2);
-        break;
-    case 2:
-        lighting.scream_room(lighting.leds1);
-        lighting.spider_room_lightning(lighting.leds2, 216);
-        break;
-    case 3:
-        lighting.spider_room_lightning(lighting.leds1, 216);
-        lighting.spider_room_lightning(lighting.leds2, 216);
-        break;
-    default:
-        lighting.clear_strip(lighting.leds1);
-        lighting.clear_strip(lighting.leds2);
-        break;
     }
 }
