@@ -130,7 +130,6 @@ void loop()
             }
             lighting.spider_room_lightning(lighting.leds1, 237);
         }
-        Serial.println(switch_strips);
         break;
     case 3:
         lighting.spider_room_lightning(lighting.leds1, 237);
